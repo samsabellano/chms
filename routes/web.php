@@ -15,10 +15,13 @@ Route::prefix('admin')->group(function () {
         });
 
     Route::controller(MemberController::class)
-        ->prefix('member')
+        ->prefix('members')
         ->group(function () {
             Route::get('/', 'index')->name('admin.member');
             Route::get('/create', 'createMember')->name('admin.member.create');
-            Route::delete('/delete/{member}', 'deleteMember')->name('admin.member.delete');
+            Route::post('/store', 'storeMember')->name('admin.member.store');
+            Route::whereNumber('member')->group(function () {
+                Route::delete('/delete/{member}', 'deleteMember')->name('admin.member.delete');
+            });
         });
 });

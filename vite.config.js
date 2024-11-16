@@ -17,4 +17,8 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    // server: {
+    //     host: "https://chms.test",
+    //     port: 3000,
+    // },
 });

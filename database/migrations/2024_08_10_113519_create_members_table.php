@@ -24,7 +24,7 @@ return new class extends Migration {
             $table->enum('suffix', Suffix::toArray())->nullable();
             $table->string('photo')->nullable();
             $table->date('birth_date')->nullable();
-            $table->integer('age')->default(0);
+            $table->integer('age')->default(0)->nullable();
             $table->enum('civil_status', CivilStatus::toArray());
             $table->enum('gender', Gender::toArray());
             $table->string('contact_number', 11)->unique()->nullable();

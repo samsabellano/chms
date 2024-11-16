@@ -23,7 +23,7 @@ readonly class MemberDto
         public ?string $suffix,
         public ?string $photo,
         public ?Carbon $birthDate,
-        public int $age,
+        public ?int $age,
         public CivilStatus|string $civilStatus,
         public Gender|string $gender,
         public ?string $contactNumber,

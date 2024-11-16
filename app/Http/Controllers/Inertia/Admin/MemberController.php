@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Inertia\Admin;
 
+use App\Dto\MemberDto;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Member\MemberRequest;
 use App\Http\Resources\Member\MemberResource;
 use App\Models\Member;
 use App\Services\MemberService;
@@ -26,6 +28,13 @@ class MemberController extends Controller
     public function createMember()
     {
         return inertia("admin/member/CreateMember");
+    }
+
+    public function storeMember(MemberRequest $request)
+    {
+        $this->memberService->createMember(
+            MemberDto::fromCreateRequest($request)
+        );
     }
 
     public function deleteMember(Member $member)

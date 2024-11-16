@@ -50,7 +50,8 @@ import {
 } from "@/components/ui/dialog";
 
 const { toast } = useToast();
-const deleteForm = useForm({});
+const form = useForm({});
+
 const props = defineProps({
     members: {
         type: Object,
@@ -69,14 +70,14 @@ const props = defineProps({
 const memberName = ref(props.fullName);
 const memberId = ref(props.id);
 
-const confirmDelete = (member) => {
+function confirmDelete(member) {
     memberId.value = member.id;
     memberName.value = member.fullName;
-};
+}
 
-const deleteMember = () => {
+function deleteMember() {
     if (memberId.value) {
-        deleteForm.delete(route("admin.member.delete", memberId.value), {
+        form.delete(route("admin.member.delete", memberId.value), {
             preserveScroll: true,
             onSuccess: () =>
                 toast({
@@ -85,12 +86,12 @@ const deleteMember = () => {
                 }),
         });
     }
-};
+}
 
-const cancelDeleteMember = () => {
+function cancelDeleteMember() {
     memberId.value = null;
     memberName.value = "";
-};
+}
 </script>
 
 <template>
@@ -274,18 +275,18 @@ const cancelDeleteMember = () => {
                                                     <Button
                                                         @click="deleteMember"
                                                         :disabled="
-                                                            deleteForm.processing
+                                                            form.processing
                                                         "
                                                         type="submit"
                                                     >
                                                         <Loader2
                                                             v-if="
-                                                                deleteForm.processing
+                                                                form.processing
                                                             "
                                                             class="w-4 h-4 mr-2 animate-spin"
                                                         />
                                                         {{
-                                                            deleteForm.processing
+                                                            form.processing
                                                                 ? "Deleting"
                                                                 : "Delete"
                                                         }}
