@@ -340,13 +340,18 @@ function saveMember() {
                             </div>
                         </div>
                     </CardContent>
-                    <div class="pb-6 px-6">
+                    <div class="flex flex-wrap gap-2 pt-2 pb-6 px-6">
+                        <Link :href="route('admin.member')">
+                            <Button type="button" variant="secondary">
+                                Cancel
+                            </Button>
+                        </Link>
                         <Button type="submit">
                             <Loader2
                                 v-if="form.processing"
                                 class="w-4 h-4 mr-2 animate-spin"
                             />
-                            {{ form.processing ? "Saving" : "Save member" }}
+                            {{ form.processing ? "Saving" : "Save" }}
                         </Button>
                     </div>
                 </Card>
