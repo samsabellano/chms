@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class Member extends Model
 {
@@ -20,6 +21,7 @@ class Member extends Model
         'user_id',
         'occupation_id',
         'workplace_id',
+        'company_id',
         'first_name',
         'middle_name',
         'last_name',
@@ -53,6 +55,11 @@ class Member extends Model
         });
     }
 
+    public function address(): HasOne
+    {
+        return $this->hasOne(Address::class);
+    }
+
     public function baptism(): HasOne
     {
         return $this->hasOne(Baptism::class);
@@ -73,6 +80,11 @@ class Member extends Model
         return $this->belongsTo(Workplace::class);
     }
 
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
+    }
+
     public function relationships(): BelongsToMany
     {
         return $this->belongsToMany(Relationship::class);
@@ -86,6 +98,15 @@ class Member extends Model
 
         return Attribute::make(
             get: fn() => $fullName
+        );
+    }
+
+    protected function nameInitial(): Attribute
+    {
+        $initial = "{$this->first_name[0]}{$this->last_name[0]}";
+
+        return Attribute::make(
+            get: fn() => $initial
         );
     }
 

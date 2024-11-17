@@ -18,6 +18,7 @@ class MemberResource extends JsonResource
         return [
             'id' => $this->id,
             'fullName' => $this->fullName,
+            'nameInitial' => $this->nameInitial,
             'photo' => $this->photo,
             'birthDate' => $this->birth_date,
             'age' => $this->age,
@@ -29,6 +30,7 @@ class MemberResource extends JsonResource
             'user' => $this->user,
             'occupation' => $this->occupation,
             'workplace' => $this->workplace,
+            'company' => $this->company,
             'baptism' => $this->baptism,
             $this->collection
         ];

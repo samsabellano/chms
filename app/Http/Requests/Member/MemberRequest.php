@@ -43,6 +43,11 @@ class MemberRequest extends FormRequest
                 'integer',
                 Rule::exists('workplaces', 'id')
             ],
+            'company' => [
+                'nullable',
+                'integer',
+                Rule::exists('companies', 'id')
+            ],
             'first_name' => [
                 'required',
                 'min:2',
@@ -93,15 +98,7 @@ class MemberRequest extends FormRequest
             ],
             'photo' => [
                 'nullable',
-                'string',
                 File::image()
-                    ->min(1024)
-                    ->max(12 * 1024)
-                    ->dimensions(
-                        Rule::dimensions()
-                            ->maxWidth(1000)
-                            ->maxHeight(500)
-                    )
             ],
 
         ];

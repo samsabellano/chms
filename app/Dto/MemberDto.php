@@ -6,17 +6,22 @@ use App\Enums\Gender;
 use App\Enums\Suffix;
 use App\Http\Requests\Member\MemberRequest;
 use App\Models\Baptism;
+use App\Models\Company;
 use App\Models\Occupation;
 use App\Models\User;
 use App\Models\Workplace;
+use App\Traits\FileUpload;
 use Illuminate\Support\Carbon;
 
 readonly class MemberDto
 {
+    use FileUpload;
+
     public function __construct(
         public User|int|null $user,
         public Occupation|int|null $occupation,
         public Workplace|int|null $workplace,
+        public Company|int|null $company,
         public string $firstName,
         public ?string $middleName,
         public string $lastName,
@@ -37,11 +42,12 @@ readonly class MemberDto
             user: $request->validated('user'),
             occupation: $request->validated('occupation'),
             workplace: $request->validated('workplace'),
+            company: $request->validated('company'),
             firstName: $request->validated('first_name'),
             middleName: $request->validated('middle_name'),
             lastName: $request->validated('last_name'),
             suffix: $request->validated('suffix'),
-            photo: $request->validated('photo'),
+            photo: static::uploadImage($request->validated('photo')),
             birthDate: Carbon::parse($request->validated('birth_date')),
             age: $request->validated('age'),
             civilStatus: $request->validated('civil_status'),

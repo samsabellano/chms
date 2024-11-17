@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/toast/use-toast";
 import Toaster from "@/components/ui/toast/Toaster.vue";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     Card,
     CardContent,
@@ -81,7 +82,7 @@ function deleteMember() {
             preserveScroll: true,
             onSuccess: () =>
                 toast({
-                    title: "Delete Successful",
+                    title: "Success",
                     description: "Member successfully deleted",
                 }),
         });
@@ -183,13 +184,16 @@ function cancelDeleteMember() {
                                 :key="member.id"
                             >
                                 <TableCell class="hidden sm:table-cell">
-                                    <img
-                                        alt="Product image"
-                                        class="aspect-square rounded-md object-cover"
-                                        height="64"
-                                        src="https://img.freepik.com/free-photo/young-woman-smiling_23-2148503620.jpg?t=st=1730449105~exp=1730452705~hmac=f100b2c3bd78f4e1454b8b36f47803bc18c21a306e3984b4ff534e952deeb95e&w=1060"
-                                        width="64"
-                                    />
+                                    <Avatar>
+                                        <AvatarImage
+                                            v-if="member.photo"
+                                            :src="'/storage/' + member.photo"
+                                            :alt="member.fullName"
+                                        />
+                                        <AvatarFallback>
+                                            {{ member.nameInitial }}
+                                        </AvatarFallback>
+                                    </Avatar>
                                 </TableCell>
                                 <TableCell class="font-medium">
                                     {{ member.fullName }}

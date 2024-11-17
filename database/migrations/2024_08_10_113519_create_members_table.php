@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('occupation_id')->nullable()->constrained('occupations')->nullOnDelete();
             $table->foreignId('workplace_id')->nullable()->constrained('workplaces')->nullOnDelete();
+            $table->foreignId('company_id')->nullable()->constrained('companies')->nullOnDelete();
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->string('last_name');

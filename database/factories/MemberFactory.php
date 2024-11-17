@@ -23,7 +23,6 @@ class MemberFactory extends Factory
             'first_name' => fake()->firstName,
             'middle_name' => fake()->lastName,
             'last_name' => fake()->lastName,
-            'photo' => fake()->imageUrl,
             'age' => random_int(5, 50),
             'gender' => 'Male',
             'address' => fake()->city

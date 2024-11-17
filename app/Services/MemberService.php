@@ -11,7 +11,7 @@ class MemberService implements IMember
 {
     public function getMembers(): Collection|LengthAwarePaginator
     {
-        return Member::all();
+        return Member::get()->sortByDesc('created_at');
     }
 
     public function createMember(MemberDto $dto): Member
@@ -20,6 +20,7 @@ class MemberService implements IMember
             'user_id' => $dto->user,
             'occupation_id' => $dto->occupation,
             'workplace_id' => $dto->workplace,
+            'company_id' => $dto->company,
             'first_name' => $dto->firstName,
             'middle_name' => $dto->middleName,
             'last_name' => $dto->lastName,
@@ -45,6 +46,7 @@ class MemberService implements IMember
             'user_id' => $dto->user,
             'occupation_id' => $dto->occupation,
             'workplace_id' => $dto->workplace,
+            'company_id' => $dto->company,
             'first_name' => $dto->firstName,
             'middle_name' => $dto->middleName,
             'last_name' => $dto->lastName,

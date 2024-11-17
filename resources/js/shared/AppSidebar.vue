@@ -5,7 +5,14 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Home, LineChart, Package2, Settings, Users2 } from "lucide-vue-next";
+import {
+    Home,
+    LineChart,
+    Package2,
+    Settings,
+    Users2,
+    BriefcaseBusiness,
+} from "lucide-vue-next";
 </script>
 
 <template>
@@ -49,15 +56,21 @@ import { Home, LineChart, Package2, Settings, Users2 } from "lucide-vue-next";
                 </Tooltip>
                 <Tooltip>
                     <TooltipTrigger as-child>
-                        <Link
-                            href="#"
-                            class="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                        >
-                            <LineChart class="h-5 w-5" />
-                            <span class="sr-only">Analytics</span>
-                        </Link>
+                        <NavLink>
+                            <BriefcaseBusiness class="h-5 w-5" />
+                            <span class="sr-only">Work</span>
+                        </NavLink>
                     </TooltipTrigger>
-                    <TooltipContent side="right"> Analytics </TooltipContent>
+                    <TooltipContent side="right"> Work </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                    <TooltipTrigger as-child>
+                        <NavLink>
+                            <LineChart class="h-5 w-5" />
+                            <span class="sr-only">Statistics</span>
+                        </NavLink>
+                    </TooltipTrigger>
+                    <TooltipContent side="right"> Statistics </TooltipContent>
                 </Tooltip>
             </TooltipProvider>
         </nav>
