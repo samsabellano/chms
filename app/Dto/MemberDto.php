@@ -21,7 +21,6 @@ readonly class MemberDto
         public User|int|null $user,
         public Occupation|int|null $occupation,
         public Workplace|int|null $workplace,
-        public Company|int|null $company,
         public string $firstName,
         public ?string $middleName,
         public string $lastName,
@@ -32,7 +31,13 @@ readonly class MemberDto
         public CivilStatus|string $civilStatus,
         public Gender|string $gender,
         public ?string $contactNumber,
-        public ?string $address
+        public string $lineAddress1,
+        public ?string $lineAddress2,
+        public string $barangay,
+        public string $cityOrMunicipality,
+        public string $stateOrProvince,
+        public string $country,
+        public string $postalCode
     ) {
     }
 
@@ -42,7 +47,6 @@ readonly class MemberDto
             user: $request->validated('user'),
             occupation: $request->validated('occupation'),
             workplace: $request->validated('workplace'),
-            company: $request->validated('company'),
             firstName: $request->validated('first_name'),
             middleName: $request->validated('middle_name'),
             lastName: $request->validated('last_name'),
@@ -53,7 +57,13 @@ readonly class MemberDto
             civilStatus: $request->validated('civil_status'),
             gender: $request->validated('gender'),
             contactNumber: $request->validated('contact_number'),
-            address: $request->validated('address')
+            lineAddress1: $request->validated('address_line_1'),
+            lineAddress2: $request->validated('address_line_2'),
+            barangay: $request->validated('barangay'),
+            cityOrMunicipality: $request->validated('city_or_municipality'),
+            stateOrProvince: $request->validated('state_or_province'),
+            country: $request->validated('country'),
+            postalCode: $request->validated('postal_code')
         );
     }
 }

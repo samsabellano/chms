@@ -56,7 +56,7 @@ import {
                 </Tooltip>
                 <Tooltip>
                     <TooltipTrigger as-child>
-                        <NavLink>
+                        <NavLink :href="route('admin.member')">
                             <BriefcaseBusiness class="h-5 w-5" />
                             <span class="sr-only">Work</span>
                         </NavLink>
@@ -65,7 +65,7 @@ import {
                 </Tooltip>
                 <Tooltip>
                     <TooltipTrigger as-child>
-                        <NavLink>
+                        <NavLink :href="route('admin.member')">
                             <LineChart class="h-5 w-5" />
                             <span class="sr-only">Statistics</span>
                         </NavLink>

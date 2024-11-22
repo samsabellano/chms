@@ -18,10 +18,9 @@ return new class extends Migration {
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('occupation_id')->nullable()->constrained('occupations')->nullOnDelete();
             $table->foreignId('workplace_id')->nullable()->constrained('workplaces')->nullOnDelete();
-            $table->foreignId('company_id')->nullable()->constrained('companies')->nullOnDelete();
-            $table->string('first_name');
-            $table->string('middle_name')->nullable();
-            $table->string('last_name');
+            $table->string('first_name', 100);
+            $table->string('middle_name', 100)->nullable();
+            $table->string('last_name', 100);
             $table->enum('suffix', Suffix::toArray())->nullable();
             $table->string('photo')->nullable();
             $table->date('birth_date')->nullable();
@@ -29,7 +28,6 @@ return new class extends Migration {
             $table->enum('civil_status', CivilStatus::toArray());
             $table->enum('gender', Gender::toArray());
             $table->string('contact_number', 11)->unique()->nullable();
-            $table->text('address');
             $table->timestamps();
         });
     }

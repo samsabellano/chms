@@ -1,9 +1,15 @@
 <script setup>
 const pageTitle = "Create Member";
+import { ref, watch } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, Loader2 } from "lucide-vue-next";
+import {
+    Calendar as CalendarIcon,
+    Loader2,
+    Check,
+    ChevronsUpDown,
+} from "lucide-vue-next";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -30,29 +36,95 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
+} from "@/components/ui/command";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const { toast } = useToast();
+const workplaceAddress = ref("");
+const value = ref("");
+const open = ref(false);
+const props = defineProps({
+    suffixes: {
+        type: Object,
+        required: true,
+    },
+    genders: {
+        type: Object,
+        required: true,
+    },
+    occupations: {
+        type: Object,
+        required: true,
+    },
+    workplaces: {
+        type: Object,
+        required: true,
+    },
+});
+
+const frameworks = [
+    { value: "next.js", label: "Next.js" },
+    {
+        value: "sveltekit",
+        label: "Samuel C. Sabellano Jr",
+    },
+    { value: "nuxt", label: "Nuxt" },
+    { value: "remix", label: "Remix" },
+    { value: "astro", label: "Astro" },
+];
+
 const form = useForm({
-    first_name: "",
-    middle_name: "",
-    last_name: "",
-    suffix: "",
-    gender: "",
-    birth_date: "",
-    civil_status: "",
-    address: "",
-    contact_number: "",
-    photo: "",
+    first_name: null,
+    middle_name: null,
+    last_name: null,
+    suffix: null,
+    gender: null,
+    birth_date: null,
+    civil_status: null,
+    contact_number: null,
+    photo: null,
 
     // Address
-    address_line_1: "",
-    address_line_2: "",
-    barangay: "",
-    city_or_municipality: "",
-    state_or_province: "",
-    country: "",
-    postal_code: "",
+    address_line_1: null,
+    address_line_2: null,
+    barangay: null,
+    city_or_municipality: null,
+    state_or_province: null,
+    country: null,
+    postal_code: null,
+
+    // Workplace
+    occupation: null,
+    workplace_id: null,
+    workplace_address: null,
 });
+
+watch(
+    () => form.workplace_id,
+    (newValue) => {
+        const selectedWorkplace = props.workplaces.data.find(
+            (workplace) => workplace.id.toString() === newValue
+        );
+
+        if (selectedWorkplace) {
+            workplaceAddress.value = selectedWorkplace.address;
+        } else {
+            workplaceAddress.value = "";
+        }
+    }
+);
 
 function saveMember() {
     form.post(route("admin.member.store"), {
@@ -61,6 +133,13 @@ function saveMember() {
             toast({
                 title: "Success",
                 description: "Member successfully created",
+            });
+        },
+        onError: () => {
+            toast({
+                title: "Uh oh! Something went wrong.",
+                description:
+                    "Unable to process the form. Pleace check the errors.",
             });
         },
     });
@@ -171,20 +250,12 @@ function saveMember() {
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
-                                                    <SelectItem value="Sr">
-                                                        Sr
-                                                    </SelectItem>
-                                                    <SelectItem value="Jr">
-                                                        Jr
-                                                    </SelectItem>
-                                                    <SelectItem value="I">
-                                                        I
-                                                    </SelectItem>
-                                                    <SelectItem value="II">
-                                                        II
-                                                    </SelectItem>
-                                                    <SelectItem value="III">
-                                                        III
+                                                    <SelectItem
+                                                        v-for="suffix in props.suffixes"
+                                                        :key="suffix"
+                                                        :value="suffix"
+                                                    >
+                                                        {{ suffix }}
                                                     </SelectItem>
                                                 </SelectGroup>
                                             </SelectContent>
@@ -211,11 +282,12 @@ function saveMember() {
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
-                                                    <SelectItem value="Male">
-                                                        Male
-                                                    </SelectItem>
-                                                    <SelectItem value="Female">
-                                                        Female
+                                                    <SelectItem
+                                                        v-for="gender in props.genders"
+                                                        :key="gender"
+                                                        :value="gender"
+                                                    >
+                                                        {{ gender }}
                                                     </SelectItem>
                                                 </SelectGroup>
                                             </SelectContent>
@@ -358,6 +430,105 @@ function saveMember() {
                                         >
                                             {{ form.errors.photo }}
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </div>
+                    <hr />
+                    <div class="flex flex-col gap-2">
+                        <CardHeader>
+                            <CardTitle>Address</CardTitle>
+                            <CardDescription>
+                                Enter the correct address in the fields
+                                provided.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div class="grid gap-y-6">
+                                <div
+                                    class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-6"
+                                >
+                                    <div class="grid gap-2 relative">
+                                        <Label for="address-line-1">
+                                            Related to member
+                                        </Label>
+                                        <Popover v-model:open="open">
+                                            <PopoverTrigger as-child>
+                                                <Button
+                                                    variant="outline"
+                                                    role="combobox"
+                                                    :aria-expanded="open"
+                                                    class="w-full justify-between"
+                                                >
+                                                    {{
+                                                        value
+                                                            ? frameworks.find(
+                                                                  (framework) =>
+                                                                      framework.value ===
+                                                                      value
+                                                              )?.label
+                                                            : ""
+                                                    }}
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent class="w-full p-0">
+                                                <Command>
+                                                    <CommandInput
+                                                        class="h-9"
+                                                        placeholder="Search framework..."
+                                                    />
+                                                    <CommandEmpty
+                                                        >No framework
+                                                        found.</CommandEmpty
+                                                    >
+                                                    <CommandList>
+                                                        <CommandGroup>
+                                                            <CommandItem
+                                                                v-for="framework in frameworks"
+                                                                :key="
+                                                                    framework.value
+                                                                "
+                                                                :value="
+                                                                    framework.value
+                                                                "
+                                                                @select="
+                                                                    (ev) => {
+                                                                        if (
+                                                                            typeof ev
+                                                                                .detail
+                                                                                .value ===
+                                                                            'string'
+                                                                        ) {
+                                                                            value =
+                                                                                ev
+                                                                                    .detail
+                                                                                    .value;
+                                                                        }
+                                                                        open = false;
+                                                                    }
+                                                                "
+                                                            >
+                                                                {{
+                                                                    framework.label
+                                                                }}
+                                                                <Check
+                                                                    :class="
+                                                                        cn(
+                                                                            'ml-auto h-4 w-4',
+                                                                            value ===
+                                                                                framework.value
+                                                                                ? 'opacity-100'
+                                                                                : 'opacity-0'
+                                                                        )
+                                                                    "
+                                                                />
+                                                            </CommandItem>
+                                                        </CommandGroup>
+                                                    </CommandList>
+                                                </Command>
+                                            </PopoverContent>
+                                        </Popover>
                                     </div>
                                 </div>
                             </div>
@@ -524,7 +695,7 @@ function saveMember() {
                                         </div>
                                     </div>
                                     <div class="grid gap-2 relative">
-                                        <Label for="country">
+                                        <Label for="postal-code">
                                             Postal Code
                                         </Label>
                                         <Input
@@ -533,7 +704,7 @@ function saveMember() {
                                                 'ring-1 ring-red-300':
                                                     form.errors.postal_code,
                                             }"
-                                            id="country"
+                                            id="postal-code"
                                             required
                                         />
                                         <div
@@ -565,7 +736,7 @@ function saveMember() {
                         <CardContent>
                             <div class="grid gap-y-6">
                                 <div
-                                    class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-6"
+                                    class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-x-4 gap-y-6"
                                 >
                                     <div class="grid gap-2 relative">
                                         <Label for="occupation">
@@ -574,11 +745,11 @@ function saveMember() {
                                                 (optional)
                                             </span>
                                         </Label>
-                                        <Select v-model="form.suffix">
+                                        <Select v-model="form.occupation">
                                             <SelectTrigger
                                                 :class="{
                                                     'ring-1 ring-red-300':
-                                                        form.errors.suffix,
+                                                        form.errors.occupation,
                                                 }"
                                                 id="occupation"
                                                 class="items-start [&_[data-description]]:hidden"
@@ -588,79 +759,38 @@ function saveMember() {
                                             <SelectContent>
                                                 <SelectGroup>
                                                     <SelectItem
-                                                        value="Accountant"
+                                                        v-for="occupation in props
+                                                            .occupations.data"
+                                                        :key="occupation.id"
+                                                        :value="
+                                                            occupation.id.toString()
+                                                        "
                                                     >
-                                                        Accountant
-                                                    </SelectItem>
-                                                    <SelectItem
-                                                        value="Architect"
-                                                    >
-                                                        Architect
-                                                    </SelectItem>
-                                                    <SelectItem value="Artist">
-                                                        Artist
-                                                    </SelectItem>
-                                                    <SelectItem
-                                                        value="Attorney"
-                                                    >
-                                                        Attorney
-                                                    </SelectItem>
-                                                    <SelectItem
-                                                        value="Business Owner"
-                                                    >
-                                                        Business Owner
-                                                    </SelectItem>
-                                                    <SelectItem value="Chef">
-                                                        Chef
-                                                    </SelectItem>
-                                                    <SelectItem value="Doctor">
-                                                        Doctor
-                                                    </SelectItem>
-                                                    <SelectItem
-                                                        value="Engineer"
-                                                    >
-                                                        Engineer
-                                                    </SelectItem>
-                                                    <SelectItem
-                                                        value="Law Enforcement"
-                                                    >
-                                                        Law Enforcement
-                                                    </SelectItem>
-                                                    <SelectItem value="Nurse">
-                                                        Nurse
-                                                    </SelectItem>
-                                                    <SelectItem
-                                                        value="Professor"
-                                                    >
-                                                        Professor
-                                                    </SelectItem>
-                                                    <SelectItem
-                                                        value="Software Developer"
-                                                    >
-                                                        Software Developer
-                                                    </SelectItem>
-                                                    <SelectItem value="Teacher">
-                                                        Teacher
+                                                        {{ occupation.name }}
                                                     </SelectItem>
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>
                                         <div
                                             class="absolute text-xs text-red-500 top-[60px]"
-                                            v-if="form.errors.suffx"
+                                            v-if="form.errors.occupation"
                                         >
-                                            {{ form.errors.suffx }}
+                                            {{ form.errors.occupation }}
                                         </div>
                                     </div>
                                     <div class="grid gap-2 relative">
                                         <Label for="company">
-                                            Company/Workplace
+                                            Workplace
+                                            <span class="text-muted-foreground">
+                                                (optional)
+                                            </span>
                                         </Label>
-                                        <Select v-model="form.suffix">
+                                        <Select v-model="form.workplace_id">
                                             <SelectTrigger
                                                 :class="{
                                                     'ring-1 ring-red-300':
-                                                        form.errors.suffix,
+                                                        form.errors
+                                                            .workplace_id,
                                                 }"
                                                 id="company"
                                                 class="items-start [&_[data-description]]:hidden"
@@ -670,58 +800,51 @@ function saveMember() {
                                             <SelectContent>
                                                 <SelectGroup>
                                                     <SelectItem
-                                                        value="Accountant"
+                                                        v-for="workplace in props
+                                                            .workplaces.data"
+                                                        :key="workplace.id"
+                                                        :value="
+                                                            workplace.id.toString()
+                                                        "
                                                     >
-                                                        McArthur Highway,
-                                                        Matina, Davao City
-                                                    </SelectItem>
-                                                    <SelectItem
-                                                        value="Architect"
-                                                    >
-                                                        Ma-a National
-                                                        Highschool, Ma-a, Davao
-                                                        City
-                                                    </SelectItem>
-                                                    <SelectItem value="Artist">
-                                                        GMall, Bajada Davao City
-                                                    </SelectItem>
-                                                    <SelectItem
-                                                        value="Attorney"
-                                                    >
-                                                        Uyanguren, Davao City
+                                                        {{ workplace.name }}
                                                     </SelectItem>
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>
                                         <div
                                             class="absolute text-xs text-red-500 top-[60px]"
-                                            v-if="form.errors.suffx"
+                                            v-if="form.errors.workplace_id"
                                         >
-                                            {{ form.errors.suffx }}
+                                            {{ form.errors.workplace_id }}
                                         </div>
                                     </div>
-                                    <div class="grid gap-2 relative">
+                                    <div
+                                        class="grid gap-2 relative"
+                                        v-if="workplaceAddress"
+                                    >
                                         <Label for="company-address">
                                             Address
-                                            <span class="text-muted-foreground">
-                                                (optional)
-                                            </span>
                                         </Label>
-                                        <Input
-                                            v-model="form.postal_code"
-                                            :class="{
-                                                'ring-1 ring-red-300':
-                                                    form.errors.postal_code,
-                                            }"
-                                            id="company-address"
-                                            required
-                                        />
-                                        <div
-                                            class="absolute text-xs text-red-500 top-[60px]"
-                                            v-if="form.errors.suffx"
-                                        >
-                                            {{ form.errors.suffx }}
-                                        </div>
+                                        <TooltipProvider :delayDuration="300">
+                                            <Tooltip>
+                                                <TooltipTrigger as-child>
+                                                    <Input
+                                                        v-model="
+                                                            workplaceAddress
+                                                        "
+                                                        id="company-address"
+                                                        required
+                                                        readonly
+                                                    />
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <p>
+                                                        This field is readonly
+                                                    </p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </TooltipProvider>
                                     </div>
                                 </div>
                             </div>

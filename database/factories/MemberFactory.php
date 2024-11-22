@@ -25,7 +25,6 @@ class MemberFactory extends Factory
             'last_name' => fake()->lastName,
             'age' => random_int(5, 50),
             'gender' => 'Male',
-            'address' => fake()->city
         ];
     }
 }

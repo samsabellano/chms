@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const mode = useColorMode({
-    disableTransition: false,
+    disableTransition: true,
 });
 </script>
 

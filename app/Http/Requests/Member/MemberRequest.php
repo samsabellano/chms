@@ -57,7 +57,7 @@ class MemberRequest extends FormRequest
                 'nullable',
                 'string',
                 'min:2',
-                'max:50'
+                'max:100'
             ],
             'last_name' => [
                 'required',
@@ -75,11 +75,7 @@ class MemberRequest extends FormRequest
             'contact_number' => [
                 'nullable',
                 'string',
-                'max:12'
-            ],
-            'address' => [
-                'required',
-                'string'
+                'max:11'
             ],
             'suffix' => [
                 'nullable',
@@ -101,6 +97,49 @@ class MemberRequest extends FormRequest
                 File::image()
             ],
 
+            // Address
+            'address_line_1' => [
+                'required',
+                'string',
+                'min:2',
+                'max:100'
+            ],
+            'address_line_2' => [
+                'nullable',
+                'string',
+                'min:2',
+                'max:100'
+            ],
+            'barangay' => [
+                'required',
+                'string',
+                'min:2',
+                'max:50'
+            ],
+            'city_or_municipality' => [
+                'required',
+                'string',
+                'min:2',
+                'max:50'
+            ],
+            'state_or_province' => [
+                'required',
+                'string',
+                'min:2',
+                'max:50'
+            ],
+            'country' => [
+                'required',
+                'string',
+                'min:2',
+                'max:50'
+            ],
+            'postal_code' => [
+                'required',
+                'string',
+                'min:4',
+                'max:7'
+            ],
         ];
     }
 }

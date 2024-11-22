@@ -21,7 +21,6 @@ class Member extends Model
         'user_id',
         'occupation_id',
         'workplace_id',
-        'company_id',
         'first_name',
         'middle_name',
         'last_name',
@@ -32,7 +31,6 @@ class Member extends Model
         'civil_status',
         'gender',
         'contact_number',
-        'address'
     ];
 
     protected function casts(): array
@@ -78,11 +76,6 @@ class Member extends Model
     public function workplace(): BelongsTo
     {
         return $this->belongsTo(Workplace::class);
-    }
-
-    public function company(): BelongsTo
-    {
-        return $this->belongsTo(Company::class);
     }
 
     public function relationships(): BelongsToMany
